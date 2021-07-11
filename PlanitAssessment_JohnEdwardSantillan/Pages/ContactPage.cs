@@ -1,13 +1,12 @@
 ﻿using OpenQA.Selenium;
-using PlanitAssessment_JohnEdwardSantillan.Interfaces;
 using Protractor;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace PlanitAssessment_JohnEdwardSantillan.PageModels
+namespace PlanitAssessment_JohnEdwardSantillan.Pages
 {
-    public class ContactPage : BasePage, IContactPage
+    public class ContactPage : BasePage
     {
         public ContactPage(IWebDriver webDriver, bool isMobileSite) 
             : base(webDriver, isMobileSite)

@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Drawing;
-using PlanitAssessment_JohnEdwardSantillan.Interfaces;
+using System.Linq;
+using System.ComponentModel;
+using System.Globalization;
 
-namespace PlanitAssessment_JohnEdwardSantillan.PageModels
+namespace PlanitAssessment_JohnEdwardSantillan.Pages
 {
-    public abstract class BasePage : IBasePage
+    public abstract class BasePage
     {
         private protected IWebDriver _driver;
         private protected bool _isMobileSite;
@@ -25,10 +27,44 @@ namespace PlanitAssessment_JohnEdwardSantillan.PageModels
         public IWebElement ShopMenu => _driver.FindElement(By.LinkText("Shop"));
         public IWebElement ContactMenu => _driver.FindElement(By.LinkText("Contact"));
         public IWebElement LoginMenu => _driver.FindElement(By.LinkText("Login"));
-        public IWebElement CartMenu => _driver.FindElement(By.Id("nav-cart"));
+        public IWebElement CartMenu => _driver.FindElement(By.PartialLinkText("Cart"));
         public IWebElement NavBarMenu => _driver.FindElement(By.CssSelector(".btn-navbar"));
 
-        
+
+        public string GetElementAttribute(IWebElement element, string attribute)
+        {
+            return element.GetAttribute(attribute);
+        }
+
+        public void Click(IWebElement button)
+        {
+            button.Click();
+        }
+
+        public void Click(IWebElement button, int clicks)
+        {
+            int iterator = 0;
+
+            do
+            {
+                button.Click();
+                iterator++;
+            }
+            while (iterator < clicks);
+
+        }
+
+        public string GetNumbersFromText(string input)
+        {
+            return new string(input.Where(c => char.IsDigit(c) || c.Equals('.')).ToArray());
+        }
+
+        public T TryParseText<T>(string text)
+        {
+            TypeConverter converter = TypeDescriptor.GetConverter(typeof(T));
+            return (T)converter.ConvertFromString(null, CultureInfo.InvariantCulture, text);
+        }
+
         public void ClickNavBarMenu() => NavBarMenu.Click();
 
         public void ClickHomeMenu()
