@@ -13,28 +13,27 @@ using System.Xml;
 
 namespace PlanitAssessment_JohnEdwardSantillan.Tests
 {
-    public class ContactPageTests : FixtureSetup
+    public class AutomationTests : FixtureSetup
     {
         [SetUp]
         public void Setup()
         {
-            //driver.Navigate().GoToUrl("http://jupiter.cloud.planittesting.com");
+            ngWebDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
         }
 
         [TearDown]
         public void TearDown()
         {
             driver.Navigate().GoToUrl("http://jupiter.cloud.planittesting.com");
-            //driver.Quit();
         }
 
         [Test]
-        public void ValidateMandatoryFields_FullScreen_TestCase1()
+        public void TestCase1_ValidateMandatoryFields()
         {
             HomePage home = new HomePage(ngWebDriver, false);
             ContactPage contact = new ContactPage(ngWebDriver, false);
 
-            ngWebDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
+            ngWebDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
 
             home.ClickContactMenu();
             contact.ClickSubmit();
@@ -59,21 +58,11 @@ namespace PlanitAssessment_JohnEdwardSantillan.Tests
             contact.ForenameErr.Count.Should().Be(0);
             contact.EmailErr.Count.Should().Be(0);
             contact.MessageErr.Count.Should().Be(0);
-
-        }
-
-        [Test]
-        public void ValidateMandatoryFields_MobileScreen_TestCase1()
-        {
-            HomePage home = new HomePage(ngWebDriver, true);
-            home.ClickContactMenu();
-
-
         }
 
 
         [Test]
-        public void SubmitContact_FullScreen_TestCase2()
+        public void TestCase2_SubmitContact()
         {
             HomePage home = new HomePage(ngWebDriver, false);
             ContactPage contact = new ContactPage(ngWebDriver, false);
@@ -99,7 +88,7 @@ namespace PlanitAssessment_JohnEdwardSantillan.Tests
         }
 
         [Test]
-        public void BuyItems_FullScreen_TestCase3()
+        public void TestCase3_BuyItems()
         {
             ShopPage shop = new ShopPage(ngWebDriver, false);
             CartPage cart = new CartPage(ngWebDriver, false);
@@ -125,7 +114,7 @@ namespace PlanitAssessment_JohnEdwardSantillan.Tests
         }
 
         [Test]
-        public void ValidatePriceCalculation_FullScreen_TestCase4()
+        public void TestCase4_ValidatePriceCalculation()
         {
             ShopPage shop = new ShopPage(ngWebDriver, false);
             CartPage cart = new CartPage(ngWebDriver, false);

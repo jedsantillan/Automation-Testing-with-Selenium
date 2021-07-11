@@ -20,7 +20,6 @@ namespace PlanitAssessment_JohnEdwardSantillan.Setup
             driver.Navigate().GoToUrl("http://jupiter.cloud.planittesting.com");
 
             ngWebDriver = new NgWebDriver(driver);
-            ngWebDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(15);
             ngWebDriver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(10);
 
             ngWebDriver.WaitForAngular();
