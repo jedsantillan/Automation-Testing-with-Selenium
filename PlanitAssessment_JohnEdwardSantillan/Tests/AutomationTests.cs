@@ -2,6 +2,8 @@
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
+using PlanitAssessment_JohnEdwardSantillan.Models;
 using PlanitAssessment_JohnEdwardSantillan.Pages;
 using PlanitAssessment_JohnEdwardSantillan.Setup;
 using Protractor;
@@ -9,12 +11,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Xml;
 
 namespace PlanitAssessment_JohnEdwardSantillan.Tests
 {
     public class AutomationTests : FixtureSetup
     {
+        private readonly bool isMobileSite = false;  // change to true if intent is to test mobile site
+        private readonly int threadSleep = 500;     // delay in milliseconds. This is to allow the website to load elements
+
         [SetUp]
         public void Setup()
         {
@@ -24,37 +30,39 @@ namespace PlanitAssessment_JohnEdwardSantillan.Tests
         [TearDown]
         public void TearDown()
         {
+            // navigate back to home page after end of each test case
             driver.Navigate().GoToUrl("http://jupiter.cloud.planittesting.com");
         }
+
 
         [Test]
         public void TestCase1_ValidateMandatoryFields()
         {
-            HomePage home = new HomePage(ngWebDriver, false);
-            ContactPage contact = new ContactPage(ngWebDriver, false);
+            HomePage home = new HomePage(ngWebDriver, isMobileSite);
+            ContactPage contact = new ContactPage(ngWebDriver, isMobileSite);
 
             ngWebDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
 
             home.ClickContactMenu();
             contact.ClickSubmit();
 
-            // Assertion to check if mandatory field validations are displayed
+            Thread.Sleep(threadSleep);
+
+            // Assertion for display of mandatory field validations
             contact.ForenameErr[0].Text.Should().Be("Forename is required");
             contact.EmailErr[0].Text.Should().Be("Email is required");
             contact.MessageErr[0].Text.Should().Be("Message is required");
 
-            contact.EmailTextBox.SendKeys("test");
+            contact.SendKeys(contact.EmailTextBox, "test");
 
-            // Assertion to check if email entered is valid
+            // Assertion for email format
             contact.EmailErr[0].Text.Should().Be("Please enter a valid email");
 
-            contact.EmailTextBox.Clear();
+            contact.SendKeys(contact.ForenameTextBox, "John");
+            contact.SendKeys(contact.EmailTextBox, "testuser1@gmail.com");
+            contact.SendKeys(contact.MessageTextBox, "validate message for testcase 1");
 
-            contact.ForenameTextBox.SendKeys("John");
-            contact.EmailTextBox.SendKeys("testuser1@gmail.com");
-            contact.MessageTextBox.SendKeys("validate message for testcase1");
-
-            // Assertion to check if mandatory validations are no longer visible
+            // Assertion for mandatory field validations
             contact.ForenameErr.Count.Should().Be(0);
             contact.EmailErr.Count.Should().Be(0);
             contact.MessageErr.Count.Should().Be(0);
@@ -64,23 +72,25 @@ namespace PlanitAssessment_JohnEdwardSantillan.Tests
         [Test]
         public void TestCase2_SubmitContact()
         {
-            HomePage home = new HomePage(ngWebDriver, false);
-            ContactPage contact = new ContactPage(ngWebDriver, false);
-            int retestCount = 5;
-            int iterator = 0;
+            HomePage home = new HomePage(ngWebDriver, isMobileSite);
+            ContactPage contact = new ContactPage(ngWebDriver, isMobileSite);
 
-            while (iterator < 5)
+            int retestCount = 5;
+            int iterator = 1;
+
+            while (iterator <= 5)
             {
                 home.ClickContactMenu();
-                contact.ForenameTextBox.SendKeys("John");
-                contact.EmailTextBox.SendKeys("test@yahoo.com");
-                contact.MessageTextBox.SendKeys("submit message for testcase2");
+                contact.SendKeys(contact.ForenameTextBox, $"Test Name {iterator}");
+                contact.SendKeys(contact.EmailTextBox, $"test{iterator}@gmail.com");
+                contact.SendKeys(contact.MessageTextBox, $"submit message for testcase 2. Iteration: {iterator}");
 
                 contact.ClickSubmit();
                 contact.SuccessAlert.Text.Should().StartWith("Thanks").And.EndWith("feedback.");
                 
                 contact.ClickHomeMenu(); // restart to homepage
 
+                Thread.Sleep(threadSleep);
                 iterator++;
             }
 
@@ -90,16 +100,26 @@ namespace PlanitAssessment_JohnEdwardSantillan.Tests
         [Test]
         public void TestCase3_BuyItems()
         {
-            ShopPage shop = new ShopPage(ngWebDriver, false);
-            CartPage cart = new CartPage(ngWebDriver, false);
+            ShopPage shop = new ShopPage(ngWebDriver, isMobileSite);
+            CartPage cart = new CartPage(ngWebDriver, isMobileSite);
 
-            shop.Click(shop.ShopMenu); 
+            shop.ClickShopMenu();
+            Thread.Sleep(threadSleep);
             shop.Click(shop.BtnBuyCow, 2);
             shop.Click(shop.BtnBuyBunny, 1);
 
-            shop.CartMenu.Text.Should().Contain("3");   // Total of 3 items added to cart
-
-            shop.Click(shop.CartMenu);
+            if (isMobileSite)
+            {
+                shop.ClickNavBarMenu();
+                shop.CartMenu.Text.Should().Contain("3");   // Total of 3 items added to cart
+                shop.ClickNavBarMenu();
+            }
+            else
+            {
+                shop.CartMenu.Text.Should().Contain("3");   // Total of 3 items added to cart
+            }
+            
+            shop.ClickCartMenu();
 
             cart.CartItems.Count.Should().Be(2);   // 2 types product added
 
@@ -116,43 +136,31 @@ namespace PlanitAssessment_JohnEdwardSantillan.Tests
         [Test]
         public void TestCase4_ValidatePriceCalculation()
         {
-            ShopPage shop = new ShopPage(ngWebDriver, false);
-            CartPage cart = new CartPage(ngWebDriver, false);
+            ShopPage shop = new ShopPage(ngWebDriver, isMobileSite);
+            CartPage cart = new CartPage(ngWebDriver, isMobileSite);
 
-            shop.Click(shop.ShopMenu);
+            shop.ClickShopMenu();
+            Thread.Sleep(threadSleep);
 
             shop.Click(shop.BtnBuyFrog, 2);
             shop.Click(shop.BtnBuyBunny, 5);
             shop.Click(shop.BtnBuyValentineBear, 3);
-            shop.Click(shop.CartMenu);
 
-            cart.CartMenu.Text.Should().Contain("10");  // Total of 10 items added to cart
-            cart.CartItems.Count.Should().Be(3);        // 3 types products added
+            shop.ClickCartMenu();
 
-            double frogPrice = cart.GetProductPrice(cart.CartItems[0]);
-            double bunnyPrice = cart.GetProductPrice(cart.CartItems[1]);
-            double vBearPrice = cart.GetProductPrice(cart.CartItems[2]);
+            List<CartItemModel> cartItemsList = cart.GetCartItemsList(cart.CartItems);
+            double totalPrice = cart.GetTotalPrice(cart.TotalPrice);
 
-            frogPrice.Should().Be(10.99); //Expected is 10.99 per Stuffed Frog
-            bunnyPrice.Should().Be(9.99);  //Expected is 9.99 per Fluffy Bunny    
-            vBearPrice.Should().Be(14.99); //Expected is 9.99 per Valentine Bear
+            cartItemsList[0].Price.Should().Be(10.99);  //Expected is 10.99 per Stuffed Frog
+            cartItemsList[1].Price.Should().Be(9.99);   //Expected is 10.99 per Fluffy Bunny
+            cartItemsList[2].Price.Should().Be(14.99);  //Expected is 10.99 per Valentine Bear
 
-            int frogQty = cart.GetProductQuantity(cart.CartItems[0]);
-            int bunnyQty = cart.GetProductQuantity(cart.CartItems[1]);
-            int vBearQty = cart.GetProductQuantity(cart.CartItems[2]);
+            cart.CalculateSubTotal(cartItemsList[0].Price, cartItemsList[0].Quantity).Should().Be(cartItemsList[0].SubTotal);   // Stuffed Frog
+            cart.CalculateSubTotal(cartItemsList[1].Price, cartItemsList[1].Quantity).Should().Be(cartItemsList[1].SubTotal);   // Fluffy Bunny
+            cart.CalculateSubTotal(cartItemsList[2].Price, cartItemsList[2].Quantity).Should().Be(cartItemsList[2].SubTotal);   // Valentine Bear
 
-
-            double frogSubTotal = cart.GetProductSubtotal(cart.CartItems[0]);
-            double bunnySubTotal = cart.GetProductSubtotal(cart.CartItems[1]);
-            double vBearSubTotal = cart.GetProductSubtotal(cart.CartItems[2]);
-
-            cart.CalculateSubTotal(frogPrice, frogQty).Should().Be(frogSubTotal);
-            cart.CalculateSubTotal(bunnyPrice, bunnyQty).Should().Be(bunnySubTotal);
-            cart.CalculateSubTotal(vBearPrice, vBearQty).Should().Be(vBearSubTotal);
-
-            double totalPrice = cart.TryParseText<double>(cart.GetNumbersFromText(cart.TotalPrice.Text));
-
-            totalPrice.Should().Be((frogSubTotal + bunnySubTotal + vBearSubTotal));
+            // Assertion of TotalPrice against Summation of Product Subtotal
+            totalPrice.Should().Be(cartItemsList.Sum(x => x.SubTotal)); 
 
         }
     }

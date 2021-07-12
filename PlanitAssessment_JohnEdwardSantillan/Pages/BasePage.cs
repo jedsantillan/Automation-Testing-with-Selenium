@@ -31,17 +31,7 @@ namespace PlanitAssessment_JohnEdwardSantillan.Pages
         public IWebElement NavBarMenu => _driver.FindElement(By.CssSelector(".btn-navbar"));
 
 
-        public string GetElementAttribute(IWebElement element, string attribute)
-        {
-            return element.GetAttribute(attribute);
-        }
-
-        public void Click(IWebElement button)
-        {
-            button.Click();
-        }
-
-        public void Click(IWebElement button, int clicks)
+        public void Click(IWebElement button, int clicks = 1)
         {
             int iterator = 0;
 
@@ -51,19 +41,19 @@ namespace PlanitAssessment_JohnEdwardSantillan.Pages
                 iterator++;
             }
             while (iterator < clicks);
-
         }
 
-        public string GetNumbersFromText(string input)
+        public void SendKeys(IWebElement field, string text)
         {
-            return new string(input.Where(c => char.IsDigit(c) || c.Equals('.')).ToArray());
+            field.Clear();
+            field.SendKeys(text);
         }
 
-        public T TryParseText<T>(string text)
+        public string GetElementAttribute(IWebElement element, string attribute)
         {
-            TypeConverter converter = TypeDescriptor.GetConverter(typeof(T));
-            return (T)converter.ConvertFromString(null, CultureInfo.InvariantCulture, text);
+            return element.GetAttribute(attribute);
         }
+
 
         public void ClickNavBarMenu() => NavBarMenu.Click();
 
@@ -72,9 +62,14 @@ namespace PlanitAssessment_JohnEdwardSantillan.Pages
             if (_isMobileSite)
             {
                 ClickNavBarMenu();
+                HomeMenu.Click();
+                ClickNavBarMenu();
             }
-
-            HomeMenu.Click();
+            else
+            {
+                HomeMenu.Click();
+            }
+            
         }
 
         public void ClickShopMenu()
@@ -82,9 +77,14 @@ namespace PlanitAssessment_JohnEdwardSantillan.Pages
             if (_isMobileSite)
             {
                 ClickNavBarMenu();
+                ShopMenu.Click();
+                ClickNavBarMenu();
             }
-
-            ShopMenu.Click();
+            else
+            {
+                ShopMenu.Click();
+            }
+            
         }
 
         public void ClickContactMenu()
@@ -92,9 +92,14 @@ namespace PlanitAssessment_JohnEdwardSantillan.Pages
             if (_isMobileSite)
             {
                 ClickNavBarMenu();
+                ContactMenu.Click();
+                ClickNavBarMenu();
             }
-
-            ContactMenu.Click();
+            else
+            {
+                ContactMenu.Click();
+            }
+            
         }
 
         public void ClickLoginMenu()
@@ -102,9 +107,14 @@ namespace PlanitAssessment_JohnEdwardSantillan.Pages
             if (_isMobileSite)
             {
                 ClickNavBarMenu();
+                LoginMenu.Click();
+                ClickNavBarMenu();
+            }
+            else
+            {
+                LoginMenu.Click();
             }
 
-            LoginMenu.Click();
         }
 
         public void ClickCartMenu()
@@ -112,9 +122,13 @@ namespace PlanitAssessment_JohnEdwardSantillan.Pages
             if (_isMobileSite)
             {
                 ClickNavBarMenu();
+                CartMenu.Click();
+                ClickNavBarMenu();
             }
-
-            CartMenu.Click();
+            else
+            {
+                CartMenu.Click();
+            }
         }
 
 
