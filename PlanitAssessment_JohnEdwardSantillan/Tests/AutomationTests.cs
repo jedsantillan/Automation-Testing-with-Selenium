@@ -151,13 +151,16 @@ namespace PlanitAssessment_JohnEdwardSantillan.Tests
             List<CartItemModel> cartItemsList = cart.GetCartItemsList(cart.CartItems);
             double totalPrice = cart.GetTotalPrice(cart.TotalPrice);
 
-            cartItemsList[0].Price.Should().Be(10.99);  //Expected is 10.99 per Stuffed Frog
-            cartItemsList[1].Price.Should().Be(9.99);   //Expected is 10.99 per Fluffy Bunny
-            cartItemsList[2].Price.Should().Be(14.99);  //Expected is 10.99 per Valentine Bear
+            cartItemsList.Count.Should().Be(3); // 3 types of products
 
-            cart.CalculateSubTotal(cartItemsList[0].Price, cartItemsList[0].Quantity).Should().Be(cartItemsList[0].SubTotal);   // Stuffed Frog
-            cart.CalculateSubTotal(cartItemsList[1].Price, cartItemsList[1].Quantity).Should().Be(cartItemsList[1].SubTotal);   // Fluffy Bunny
-            cart.CalculateSubTotal(cartItemsList[2].Price, cartItemsList[2].Quantity).Should().Be(cartItemsList[2].SubTotal);   // Valentine Bear
+            cartItemsList[0].Price.Should().Be(10.99);  //Expected Price is 10.99 per Stuffed Frog
+            cartItemsList[1].Price.Should().Be(9.99);   //Expected Price is 9.99 per Fluffy Bunny
+            cartItemsList[2].Price.Should().Be(14.99);  //Expected Price is 14.99 per Valentine Bear
+
+            foreach (var cartItem in cartItemsList)
+            {
+                cart.CalculateSubTotal(cartItem.Price, cartItem.Quantity).Should().Be(cartItem.SubTotal);
+            }
 
             // Assertion of TotalPrice against Summation of Product Subtotal
             totalPrice.Should().Be(cartItemsList.Sum(x => x.SubTotal)); 
