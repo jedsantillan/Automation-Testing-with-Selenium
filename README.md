@@ -5,14 +5,14 @@ Planit Assessment - Automation Test
 
 	- Test the Login popup page
 	- Additional test in Cart page
-		a. Test Quantity text box by updating field value and validate Subtotal's value 
-		b. Click Remove Item button under Actions column. Validate if product in that row will be removed from Cart page
-		c. Click Empty Cart button to validate if all products added in Cart page are removed
-		d. Validate Check Out button and test how the button will be disabled and re-enabled
+	a.) Test Quantity text box by updating field value and validate Subtotal's value.
+	b.) Click Remove Item button under Actions column. Validate if product in that row will be removed from Cart page.
+	c.) Click Empty Cart button to validate if all products added in Cart page are removed.
+	d.) Validate Check Out button and test how the button will be disabled and re-enabled.
 	- Test the Check Out page
-		a. Error validations for mandatory fields of both Delivery Details and Payment Details section
-		b. Email format validation of Email text box
-		c.Test Submit button and verify if successfully submitted
+	a.) Error validations for mandatory fields of both Delivery Details and Payment Details section.
+	b.) Email format validation of Email text box.
+	c.) Test Submit button and verify if successfully submitted.
 		
 2. Jupiter Toys is expected to grow and expand its offering into books, tech, and modern art. We are expecting the of tests will grow to a very large number.
 	• What approaches could you use to reduce overall execution time?
