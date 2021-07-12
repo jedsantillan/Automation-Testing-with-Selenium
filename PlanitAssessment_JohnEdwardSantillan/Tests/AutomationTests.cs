@@ -18,25 +18,23 @@ namespace PlanitAssessment_JohnEdwardSantillan.Tests
 {
     public class AutomationTests : FixtureSetup
     {
-        private readonly bool isMobileSite = false;  // change to true if intent is to test mobile site
-        private readonly int threadSleep = 500;     // delay in milliseconds. This is to allow the website to load elements
-
+        
         [SetUp]
         public void Setup()
         {
-            ngWebDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
+            ngWebDriver.Manage().Timeouts().ImplicitWait = pageTimeout;
         }
 
         [TearDown]
         public void TearDown()
         {
             // navigate back to home page after end of each test case
-            driver.Navigate().GoToUrl("http://jupiter.cloud.planittesting.com");
+            driver.Navigate().GoToUrl(siteURL);
         }
 
 
         [Test]
-        public void TestCase1_ValidateMandatoryFields()
+        public void TestCase1_ValidateErrors_ContactPage()
         {
             HomePage home = new HomePage(ngWebDriver, isMobileSite);
             ContactPage contact = new ContactPage(ngWebDriver, isMobileSite);
@@ -70,7 +68,7 @@ namespace PlanitAssessment_JohnEdwardSantillan.Tests
 
 
         [Test]
-        public void TestCase2_SubmitContact()
+        public void TestCase2_SubmitFeedback_ContactPage()
         {
             HomePage home = new HomePage(ngWebDriver, isMobileSite);
             ContactPage contact = new ContactPage(ngWebDriver, isMobileSite);
@@ -98,7 +96,7 @@ namespace PlanitAssessment_JohnEdwardSantillan.Tests
         }
 
         [Test]
-        public void TestCase3_BuyItems()
+        public void TestCase3_BuyItems_ShopPage()
         {
             ShopPage shop = new ShopPage(ngWebDriver, isMobileSite);
             CartPage cart = new CartPage(ngWebDriver, isMobileSite);
@@ -134,7 +132,7 @@ namespace PlanitAssessment_JohnEdwardSantillan.Tests
         }
 
         [Test]
-        public void TestCase4_ValidatePriceCalculation()
+        public void TestCase4_ValidatePriceCalculation_CartPage()
         {
             ShopPage shop = new ShopPage(ngWebDriver, isMobileSite);
             CartPage cart = new CartPage(ngWebDriver, isMobileSite);
