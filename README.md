@@ -23,13 +23,12 @@ Planit Assessment - Automation Test
 	a.) The framework I made should be able to cater to the application's growth as code reusability and extensibility were considered when framework was built. Each page has its corresponding page object where each element and functionalities are specific to what that page can do. It is able to inherit from a base page to prevent code duplication.
 
 3. Describe when to use a BDD approach to automation and when NOT to use BDD 
-
-- BDD approach in automation should be used for the following instances:
+	- BDD approach in automation should be used for the following instances:
 	a.) Ideally for mid to large projects where project scope, specification and user stories are well defined and BAs, QAs, Automation Testers and Developers can closely collaborate with each other to define behavior of the application and plan steps before it gets developed and automated as BDD is highly collaborative. If this can't be done, BDD will fail.
 	b.) If the objective is end-to-end tests (for instance, from user login, user will do other business functions until user logout).
 	c.) For UI and browser testing.
 	
-- On the other hand, BDD should NOT be used for the following instances:
+	- On the other hand, BDD should NOT be used for the following instances:
 	a.) For smaller projects as BDD requires an overhead investment of time and effort in planning steps and building of code.
 	b.) If user stories are not defined as it will be hard to clearly define the behavior of the application.
 	c.) If application frequently changes specially its existing business functions as it will be challenging for maintenance and cost.
